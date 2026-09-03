@@ -32,3 +32,26 @@ class QuantumSimulator:
 
     def probabilities(self) -> np.ndarray:
         return np.abs(self.state) ** 2
+
+    def apply_cnot(self, control: int, target: int) -> None:
+        if control < 0 or control >= self.num_qubits:
+            raise ValueError("Invalid control qubit")
+
+        if target < 0 or target >= self.num_qubits:
+            raise ValueError("Invalid target qubit")
+
+        if control == target:
+            raise ValueError("Control and target qubits must be different")
+
+        new_state = np.zeros_like(self.state)
+
+        for index, amplitude in enumerate(self.state):
+            bits = list(format(index, f"0{self.num_qubits}b"))
+
+            if bits[control] == "1":
+                bits[target] = "0" if bits[target] == "1" else "1"
+
+            new_index = int("".join(bits), 2)
+            new_state[new_index] += amplitude
+
+        self.state = new_state

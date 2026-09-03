@@ -37,7 +37,10 @@ def test_hadamard_on_one_qubit():
     sim.apply_single_qubit_gate(H, 0)
 
     expected = np.array(
-        [1 / np.sqrt(2), 1 / np.sqrt(2)],
+        [
+            1 / np.sqrt(2),
+            1 / np.sqrt(2),
+        ],
         dtype=complex,
     )
 
@@ -62,3 +65,50 @@ def test_invalid_target_qubit():
 
     with pytest.raises(ValueError):
         sim.apply_single_qubit_gate(X, 2)
+
+
+def test_cnot_control_zero():
+    sim = QuantumSimulator(2)
+
+    sim.apply_cnot(control=0, target=1)
+
+    expected = np.array([1, 0, 0, 0], dtype=complex)
+
+    assert np.allclose(sim.state, expected)
+
+
+def test_cnot_control_one():
+    sim = QuantumSimulator(2)
+
+    sim.apply_single_qubit_gate(X, 0)
+    sim.apply_cnot(control=0, target=1)
+
+    expected = np.array([0, 0, 0, 1], dtype=complex)
+
+    assert np.allclose(sim.state, expected)
+
+
+def test_bell_state():
+    sim = QuantumSimulator(2)
+
+    sim.apply_single_qubit_gate(H, 0)
+    sim.apply_cnot(control=0, target=1)
+
+    expected = np.array(
+        [
+            1 / np.sqrt(2),
+            0,
+            0,
+            1 / np.sqrt(2),
+        ],
+        dtype=complex,
+    )
+
+    assert np.allclose(sim.state, expected)
+
+
+def test_cnot_same_control_and_target():
+    sim = QuantumSimulator(2)
+
+    with pytest.raises(ValueError):
+        sim.apply_cnot(control=0, target=0)
