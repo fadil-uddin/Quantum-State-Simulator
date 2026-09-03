@@ -55,3 +55,20 @@ class QuantumSimulator:
             new_state[new_index] += amplitude
 
         self.state = new_state
+
+    def measure(self) -> str:
+        probabilities = self.probabilities()
+
+        outcome = np.random.choice(
+            len(probabilities),
+            p=probabilities,
+        )
+
+        collapsed_state = np.zeros_like(self.state)
+        collapsed_state[outcome] = 1.0
+        self.state = collapsed_state
+
+        return format(
+            outcome,
+            f"0{self.num_qubits}b",
+        )

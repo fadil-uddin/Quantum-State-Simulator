@@ -112,3 +112,45 @@ def test_cnot_same_control_and_target():
 
     with pytest.raises(ValueError):
         sim.apply_cnot(control=0, target=0)
+
+
+def test_measure_zero_state():
+    sim = QuantumSimulator(1)
+
+    result = sim.measure()
+
+    assert result == "0"
+    assert np.allclose(
+        sim.state,
+        np.array([1, 0], dtype=complex),
+    )
+
+
+def test_measure_one_state():
+    sim = QuantumSimulator(1)
+
+    sim.apply_single_qubit_gate(X, 0)
+
+    result = sim.measure()
+
+    assert result == "1"
+    assert np.allclose(
+        sim.state,
+        np.array([0, 1], dtype=complex),
+    )
+
+
+def test_measurement_collapses_state():
+    sim = QuantumSimulator(1)
+
+    sim.apply_single_qubit_gate(H, 0)
+    result = sim.measure()
+
+    assert result in {"0", "1"}
+
+    if result == "0":
+        expected = np.array([1, 0], dtype=complex)
+    else:
+        expected = np.array([0, 1], dtype=complex)
+
+    assert np.allclose(sim.state, expected)
