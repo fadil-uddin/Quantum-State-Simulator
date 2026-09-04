@@ -20,7 +20,7 @@ This project implements core quantum-computing concepts without relying on a qua
 - Bit-flip noise
 - Depolarizing noise
 - Monte Carlo simulation of noisy Grover search
-- Automated tests with pytest
+- Automated testing with pytest
 - Visualisation of Grover success probability under noise
 
 ## Project Structure
@@ -36,6 +36,7 @@ quantum-state-simulator/
 ├── src/
 │   └── quantum_sim/
 │       ├── __init__.py
+│       ├── experiments.py
 │       ├── gates.py
 │       ├── grover.py
 │       ├── noise.py
